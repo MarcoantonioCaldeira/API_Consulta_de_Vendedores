@@ -3,22 +3,17 @@
    <h1>Nome do Vendedor</h1>
    <input type="text" v-model="cod_vendedor" v-on:change="Get_Nome" placeholder="Codigo do vendedor">
 
-   <div v-if="cod_vendedor_data != null">
-
-    <br>Nome do Vendedor: {{ cod_vendedor_data.nome }}
+   <div id="resultado"  v-if="cod_vendedor_data != null">
+    
+    Nome do Vendedor: {{cod_vendedor_data.nome}}
     
    </div>
-
   </div>
-
-  <!-- <h1>Clique aqui para ver os dados</h1>
-
-  <button v-on:click="Get_Vendedores_Dados">Clique aqui</button> -->
 </template>
 
 <script>
 import Tela_teste from '@/components/Tela_teste.vue';
-import axios from 'axios'
+// import { assertExpressionStatement } from '@babel/types';
 import api from './api';
 
 export default{
@@ -30,7 +25,8 @@ export default{
   data(){
     return{
       cod_vendedor: "",
-      cod_vendedor_data: null
+      cod_vendedor_data: null,
+      cod_vendedor_keys: []
     }; 
   },
   created() {
@@ -43,38 +39,32 @@ export default{
 
       var self = this;
 
-      api.get("/vendedores?cod_vendedor=" + this.cod_vendedor)
-      .then((res) => {
+      api.get("/vendedores?cod_vendedor=" + self.cod_vendedor)
+      .then((response) => {
 
-        console.log(res);
-        self.cod_vendedor_data = res.data;
+        console.log(response);
+        self.cod_vendedor_data = response.data;
+        self.cod_vendedor_keys = Object.keys( self.cod_vendedor_data );
       })
       .catch((error) => {
         console.log(error);
       })
       .finally(function () {
 
-      });
-    },
-
-
-    // Get_Vendedores_Dados(){
-      
-    //   var self = this;
-
-    //   api.get("/vendedores")
-    //   .then((res) => {
-
-    //     console.log(res);
-    //     self.cod_vendedor_data = res.data;
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   })
-    //   .finally(function () {
-
-    //   });
-    // }
+      });     
+    }
   }
 };
 </script>
+
+<style>
+
+#resultado{
+    width: calc(101% - 110px);
+    height: 500px;
+    background-color: rgb(206, 205, 205);
+    margin-left: 2%;
+    border-radius: 5px;
+  }
+
+</style>
